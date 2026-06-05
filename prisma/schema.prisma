@@ -1,0 +1,177 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Cocktail {
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  category      String
+  style         String
+  baseSpirit    String
+  method        String
+  difficulty    String
+  prepTime      String
+  abv           String
+  glass         String
+  ice           String
+  garnish       String
+  origin        String
+  originDate    String
+  rating        Int
+  tags          String   // JSON string array
+  notes         String
+  variations    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  ingredients   CocktailIngredient[]
+  instructions  Instruction[]
+}
+
+model Ingredient {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  type        String  // Spirit, Syrup, Infusion, Liqueur, Fresh, etc.
+  brand       String
+  
+  // Relationships
+  cocktails   CocktailIngredient[]
+}
+
+model CocktailIngredient {
+  id           Int        @id @default(autoincrement())
+  cocktailId   Int
+  ingredientId Int
+  amount       String     // "2 oz", "0.75 oz", "3 dashes", "Pinch"
+  notes        String    // "(fresh)", "([[Brand Name]])", "(homemade)"
+  order        Int        // For maintaining ingredient order
+  
+  cocktail     Cocktail   @relation(fields: [cocktailId], references: [id], onDelete: Cascade)
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  
+  @@unique([cocktailId, ingredientId])
+  @@index([cocktailId])
+}
+
+model Instruction {
+  id         Int      @id @default(autoincrement())
+  cocktailId Int
+  stepNumber Int
+  text       String
+  
+  cocktail   Cocktail @relation(fields: [cocktailId], references: [id], onDelete: Cascade)
+  
+  @@unique([cocktailId, stepNumber])
+  @@index([cocktailId])
+}
+
+model Syrup {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  type         String  @default("Syrup")
+  ratio        String  // "1:1", "2:1", "3:1", "Complex"
+  sugarType    String  // "White Sugar", "Brown Sugar", "Honey", "Demerara Sugar"
+  difficulty   String
+  prepTime     String
+  shelfLife    String
+  storage      String
+  yield        String
+  tags         String  // JSON string array
+  ingredients  String  // JSON array of ingredient objects
+  instructions String  // JSON array of instruction steps
+  notes        String
+  usedIn       String // JSON array of cocktail names
+  variations   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Infusion {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  type         String  @default("Infusion")
+  baseSpirit   String
+  difficulty   String
+  prepTime     String
+  shelfLife    String
+  storage      String
+  yield        String
+  tags         String  // JSON string array
+  ingredients  String  // JSON array
+  instructions String  // JSON array
+  notes        String
+  usedIn       String // JSON array of cocktail names
+  variations   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Shrub {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  type         String  @default("Shrub")
+  base         String  // "Cherry Juice", "Strawberries", "Cucumber Juice"
+  difficulty   String
+  prepTime     String
+  shelfLife    String
+  storage      String
+  yield        String
+  tags         String
+  ingredients  String
+  instructions String
+  notes        String
+  usedIn       String
+  variations   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Liqueur {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  type         String  @default("Liqueur")
+  baseSpirit   String
+  difficulty   String
+  prepTime     String
+  shelfLife    String
+  storage      String
+  yield        String
+  tags         String
+  ingredients  String
+  instructions String
+  notes        String
+  usedIn       String
+  variations   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model OtherRecipe {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  type         String  // "Ingredient", "Amaro", etc.
+  difficulty   String
+  prepTime     String?
+  shelfLife    String
+  storage      String
+  yield        String
+  tags         String
+  ingredients  String
+  instructions String
+  notes        String
+  usedIn       String
+  variations   String
+  metadata     String // JSON for any additional fields
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
