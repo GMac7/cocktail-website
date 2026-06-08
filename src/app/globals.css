@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0d0d0f;
-  --bg-card: #16161a;
-  --bg-hover: #1e1e24;
-  --border: #2a2a35;
-  --amber: #c8952a;
-  --amber-light: #e0aa44;
-  --amber-dim: #7a5a1a;
-  --text: #e8e0d0;
-  --text-muted: #8a7d6a;
-  --text-dim: #5a5048;
+  --bg: #fdfcfa;
+  --bg-card: #ffffff;
+  --bg-hover: #f6f4f1;
+  --border: #e8e4de;
+  --amber: #a3742c;
+  --amber-light: #c08f3e;
+  --amber-dim: #f1e7d6;
+  --text: #1d1c1a;
+  --text-muted: #716c64;
+  --text-dim: #aaa49b;
 }
 
 @theme inline {
@@ -25,23 +25,28 @@
   --color-text-muted: var(--text-muted);
   --color-text-dim: var(--text-dim);
   --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-sans), Georgia, serif;
+  font-family: var(--font-sans), -apple-system, sans-serif;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--amber-dim); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
 /* Focus ring */
 :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 2px; }
 
 /* Selection */
 ::selection { background: var(--amber-dim); color: var(--text); }
+
+.font-serif-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}

@@ -33,47 +33,48 @@ export default async function CocktailPage({ params }: { params: Promise<{ id: s
   ].filter(m => m.value);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-12 w-full">
-      <Link href="/" className="inline-flex items-center gap-2 text-sm mb-8 transition-colors"
+    <div className="max-w-3xl mx-auto px-6 py-16 w-full">
+      <Link href="/" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] mb-12 transition-opacity hover:opacity-60"
         style={{ color: 'var(--text-muted)' }}>
         ← Back to collection
       </Link>
 
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-start justify-between gap-4 mb-3">
-          <h1 className="text-4xl font-semibold tracking-tight" style={{ color: 'var(--amber)' }}>
-            {cocktail.name}
-          </h1>
-          {cocktail.rating > 0 && (
-            <div className="shrink-0 text-xl font-mono px-3 py-1 rounded-lg mt-1"
-              style={{ background: 'var(--bg-card)', color: 'var(--amber)', border: '1px solid var(--border)' }}>
-              ★ {cocktail.rating}/10
-            </div>
-          )}
-        </div>
+      <div className="mb-12 text-center">
+        <p className="text-xs uppercase tracking-[0.3em] mb-4" style={{ color: 'var(--text-dim)' }}>
+          {[cocktail.baseSpirit, cocktail.category].filter(Boolean).join(' · ')}
+        </p>
+        <h1 className="font-serif-display italic text-5xl mb-4" style={{ color: 'var(--text)' }}>
+          {cocktail.name}
+        </h1>
+        <div className="w-16 h-px mx-auto mb-4" style={{ background: 'var(--amber)' }} />
+        {cocktail.rating > 0 && (
+          <p className="text-sm font-mono mb-4" style={{ color: 'var(--amber)' }}>
+            {cocktail.rating}/10
+          </p>
+        )}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {tags.map(t => (
-              <span key={t} className="text-xs px-2.5 py-1 rounded-full"
-                style={{ background: 'var(--bg-hover)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
-                #{t}
+              <span key={t} className="text-xs uppercase tracking-[0.1em] px-3 py-1"
+                style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
+                {t}
               </span>
             ))}
           </div>
         )}
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-12">
         {/* Meta grid */}
-        <section className="rounded-xl p-5" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3">
+        <section className="py-8" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5">
             {meta.map(m => (
               <div key={m.label}>
-                <div className="text-xs uppercase tracking-widest mb-0.5" style={{ color: 'var(--text-dim)' }}>
+                <div className="text-xs uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--text-dim)' }}>
                   {m.label}
                 </div>
-                <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                <div className="text-sm" style={{ color: 'var(--text)' }}>
                   {m.value}
                 </div>
               </div>
@@ -83,20 +84,19 @@ export default async function CocktailPage({ params }: { params: Promise<{ id: s
 
         {/* Ingredients */}
         <section>
-          <h2 className="text-xs uppercase tracking-widest mb-4" style={{ color: 'var(--text-dim)' }}>
+          <h2 className="font-serif-display italic text-2xl mb-6" style={{ color: 'var(--text)' }}>
             Ingredients
           </h2>
-          <div className="rounded-xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
+          <div>
             {cocktail.ingredients.map((ci, i) => (
               <div key={ci.id}
-                className="flex items-baseline justify-between px-5 py-3"
+                className="flex items-baseline justify-between py-3.5"
                 style={{
-                  background: i % 2 === 0 ? 'var(--bg-card)' : 'var(--bg-hover)',
                   borderBottom: i < cocktail.ingredients.length - 1 ? '1px solid var(--border)' : 'none',
                 }}>
-                <span className="font-medium text-sm" style={{ color: 'var(--text)' }}>
+                <span className="text-sm" style={{ color: 'var(--text)' }}>
                   {ci.ingredient.name}
-                  {ci.notes && <span className="ml-1.5 font-normal" style={{ color: 'var(--text-muted)' }}>{ci.notes}</span>}
+                  {ci.notes && <span className="ml-1.5" style={{ color: 'var(--text-muted)' }}>{ci.notes}</span>}
                 </span>
                 <span className="text-sm font-mono ml-4 shrink-0" style={{ color: 'var(--amber)' }}>
                   {ci.amount}
@@ -109,18 +109,17 @@ export default async function CocktailPage({ params }: { params: Promise<{ id: s
         {/* Instructions */}
         {cocktail.instructions.length > 0 && (
           <section>
-            <h2 className="text-xs uppercase tracking-widest mb-4" style={{ color: 'var(--text-dim)' }}>
+            <h2 className="font-serif-display italic text-2xl mb-6" style={{ color: 'var(--text)' }}>
               Instructions
             </h2>
-            <ol className="flex flex-col gap-3">
+            <ol className="flex flex-col gap-6">
               {cocktail.instructions.map(step => (
-                <li key={step.id} className="flex gap-4 rounded-xl px-5 py-4"
-                  style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                  <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    style={{ background: 'var(--amber-dim)', color: 'var(--amber-light)' }}>
+                <li key={step.id} className="flex gap-5">
+                  <span className="shrink-0 font-serif-display italic text-xl mt-0.5"
+                    style={{ color: 'var(--amber)' }}>
                     {step.stepNumber}
                   </span>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text)' }}>{step.text}</p>
+                  <p className="text-sm leading-relaxed pt-1" style={{ color: 'var(--text)' }}>{step.text}</p>
                 </li>
               ))}
             </ol>
@@ -129,24 +128,24 @@ export default async function CocktailPage({ params }: { params: Promise<{ id: s
 
         {/* Notes */}
         {cocktail.notes && (
-          <section className="rounded-xl px-5 py-4" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-            <h2 className="text-xs uppercase tracking-widest mb-2" style={{ color: 'var(--text-dim)' }}>Notes</h2>
+          <section>
+            <h2 className="text-xs uppercase tracking-[0.18em] mb-3" style={{ color: 'var(--text-dim)' }}>Notes</h2>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>{cocktail.notes}</p>
           </section>
         )}
 
         {/* Variations */}
         {cocktail.variations && (
-          <section className="rounded-xl px-5 py-4" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-            <h2 className="text-xs uppercase tracking-widest mb-2" style={{ color: 'var(--text-dim)' }}>Variations</h2>
+          <section>
+            <h2 className="text-xs uppercase tracking-[0.18em] mb-3" style={{ color: 'var(--text-dim)' }}>Variations</h2>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>{cocktail.variations}</p>
           </section>
         )}
 
-        <div className="flex justify-end">
+        <div className="flex justify-center pt-4">
           <Link href={`/admin/cocktails/${cocktail.id}/edit`}
-            className="text-sm px-4 py-2 rounded-lg transition-colors"
-            style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}>
+            className="text-xs uppercase tracking-[0.18em] px-6 py-3 rounded-full border transition-colors hover:opacity-60"
+            style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}>
             Edit recipe
           </Link>
         </div>
