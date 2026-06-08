@@ -72,7 +72,7 @@ export default function CocktailGrid({
           A Personal Collection
         </p>
         <h1 className="font-serif-display italic text-5xl sm:text-6xl mb-5" style={{ color: 'var(--text)' }}>
-          Cocktail Cabinet
+          Pours by Mackay
         </h1>
         <div className="w-16 h-px mx-auto mb-5" style={{ background: 'var(--amber)' }} />
         <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
