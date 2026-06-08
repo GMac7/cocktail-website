@@ -29,10 +29,11 @@ export default function AdminLogin() {
   return (
     <div className="flex-1 flex items-center justify-center px-6 py-24">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div className="text-5xl mb-4">🔐</div>
-          <h1 className="text-2xl font-semibold" style={{ color: 'var(--amber)' }}>Admin Access</h1>
-          <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>Enter your password to continue</p>
+        <div className="text-center mb-10">
+          <p className="text-xs uppercase tracking-[0.3em] mb-4" style={{ color: 'var(--text-dim)' }}>Private</p>
+          <h1 className="font-serif-display italic text-4xl mb-3" style={{ color: 'var(--text)' }}>Admin Access</h1>
+          <div className="w-12 h-px mx-auto mb-3" style={{ background: 'var(--amber)' }} />
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Enter your password to continue</p>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
@@ -41,19 +42,18 @@ export default function AdminLogin() {
             value={password}
             onChange={e => setPassword(e.target.value)}
             autoFocus
-            className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+            className="w-full px-4 py-3 text-sm outline-none bg-transparent"
             style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border)',
+              borderBottom: '1px solid var(--border)',
               color: 'var(--text)',
             }}
           />
-          {error && <p className="text-sm text-center" style={{ color: '#e07040' }}>{error}</p>}
+          {error && <p className="text-sm text-center" style={{ color: '#a14a4a' }}>{error}</p>}
           <button
             type="submit"
             disabled={loading || !password}
-            className="w-full py-3 rounded-xl text-sm font-semibold transition-opacity disabled:opacity-50"
-            style={{ background: 'var(--amber)', color: '#0d0d0f' }}
+            className="w-full py-3 text-xs uppercase tracking-[0.18em] rounded-full transition-opacity disabled:opacity-50 hover:opacity-80"
+            style={{ background: 'var(--text)', color: 'var(--bg)' }}
           >
             {loading ? 'Checking…' : 'Enter'}
           </button>

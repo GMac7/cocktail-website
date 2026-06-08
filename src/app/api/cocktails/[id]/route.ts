@@ -21,32 +21,40 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isAuthed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await params;
+  const cocktailId = parseInt(id);
   const body = await req.json();
-  const { ingredients, instructions, tags, ...rest } = body;
+  const { ingredients, instructions, tags, id: _formId, name, createdAt: _ca, updatedAt: _ua, ...rest } = body;
 
-  // Delete existing relationships
-  await prisma.cocktailIngredient.deleteMany({ where: { cocktailId: parseInt(id) } });
-  await prisma.instruction.deleteMany({ where: { cocktailId: parseInt(id) } });
+  // If the name is changing, check for conflicts first
+  if (name) {
+    const conflict = await prisma.cocktail.findFirst({ where: { name, NOT: { id: cocktailId } } });
+    if (conflict) return NextResponse.json({ error: `A cocktail named "${name}" already exists` }, { status: 409 });
+  }
+
+  // Delete existing relationships before updating
+  await prisma.cocktailIngredient.deleteMany({ where: { cocktailId } });
+  await prisma.instruction.deleteMany({ where: { cocktailId } });
+
+  const ingredientCreate = await Promise.all(
+    (ingredients || []).map(async (ing: { name: string; amount: string; notes: string; order: number }, idx: number) => {
+      const ingredient = await prisma.ingredient.upsert({
+        where: { name: ing.name },
+        update: {},
+        create: { name: ing.name, type: '', brand: '' },
+      });
+      return { ingredientId: ingredient.id, amount: ing.amount, notes: ing.notes || '', order: ing.order ?? idx + 1 };
+    }),
+  );
 
   const cocktail = await prisma.cocktail.update({
-    where: { id: parseInt(id) },
+    where: { id: cocktailId },
     data: {
       ...rest,
+      ...(name ? { name } : {}),
       tags: JSON.stringify(tags || []),
       variations: rest.variations || '',
       notes: rest.notes || '',
-      ingredients: {
-        create: await Promise.all(
-          (ingredients || []).map(async (ing: { name: string; amount: string; notes: string; order: number }, idx: number) => {
-            const ingredient = await prisma.ingredient.upsert({
-              where: { name: ing.name },
-              update: {},
-              create: { name: ing.name, type: '', brand: '' },
-            });
-            return { ingredientId: ingredient.id, amount: ing.amount, notes: ing.notes || '', order: ing.order ?? idx + 1 };
-          }),
-        ),
-      },
+      ingredients: { create: ingredientCreate },
       instructions: {
         create: (instructions || []).map((text: string, idx: number) => ({ stepNumber: idx + 1, text })),
       },

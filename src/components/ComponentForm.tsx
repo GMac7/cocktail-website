@@ -151,7 +151,7 @@ export default function ComponentForm({ modelType, initial }: { modelType: strin
               <input className={`${inputClass} flex-[2]`} style={inputStyle} placeholder="Ingredient"
                 value={ing.name} onChange={e => updateIng(i, 'name', e.target.value)} />
               <button type="button" onClick={() => set('ingredients', form.ingredients.filter((_, idx) => idx !== i))}
-                className="px-2.5 py-2.5 rounded-lg text-sm" style={{ color: '#e07040', border: '1px solid var(--border)' }}>✕</button>
+                className="px-2.5 py-2.5 rounded-lg text-sm" style={{ color: '#a14a4a', border: '1px solid var(--border)' }}>✕</button>
             </div>
           ))}
           <button type="button" onClick={() => set('ingredients', [...form.ingredients, { name: '', amount: '' }])}
@@ -171,7 +171,7 @@ export default function ComponentForm({ modelType, initial }: { modelType: strin
               <textarea className="flex-1 px-3 py-2.5 rounded-lg text-sm outline-none resize-none" style={inputStyle}
                 rows={2} value={step} onChange={e => updateStep(i, e.target.value)} />
               <button type="button" onClick={() => set('instructions', form.instructions.filter((_, idx) => idx !== i))}
-                className="px-2.5 py-2.5 rounded-lg text-sm mt-0.5" style={{ color: '#e07040', border: '1px solid var(--border)' }}>✕</button>
+                className="px-2.5 py-2.5 rounded-lg text-sm mt-0.5" style={{ color: '#a14a4a', border: '1px solid var(--border)' }}>✕</button>
             </div>
           ))}
           <button type="button" onClick={() => set('instructions', [...form.instructions, ''])}
@@ -194,7 +194,7 @@ export default function ComponentForm({ modelType, initial }: { modelType: strin
         </div>
       </section>
 
-      {error && <p className="text-sm text-center" style={{ color: '#e07040' }}>{error}</p>}
+      {error && <p className="text-sm text-center" style={{ color: '#a14a4a' }}>{error}</p>}
 
       <div className="flex justify-end gap-3">
         <button type="button" onClick={() => router.back()}
@@ -203,7 +203,7 @@ export default function ComponentForm({ modelType, initial }: { modelType: strin
         </button>
         <button type="submit" disabled={saving}
           className="px-6 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-50"
-          style={{ background: 'var(--amber)', color: '#0d0d0f' }}>
+          style={{ background: 'var(--text)', color: 'var(--bg)' }}>
           {saving ? 'Saving…' : form.id ? 'Save changes' : `Create ${modelType}`}
         </button>
       </div>
