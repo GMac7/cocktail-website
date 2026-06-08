@@ -8,7 +8,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"], style: ["normal", "italic"] });
 
 export const metadata: Metadata = {
-  title: "The Cocktail Cabinet",
+  title: "Pours by Mackay",
   description: "A personal collection of handcrafted cocktail recipes",
 };
 
@@ -20,11 +20,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 group">
               <span className="font-serif-display text-2xl italic tracking-wide" style={{ color: "var(--text)" }}>
-                The Cocktail Cabinet
+                Pours by Mackay
               </span>
             </Link>
             <nav className="flex items-center gap-10">
-              <Link href="/" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
+              <Link href="/cocktails" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
                 Cocktails
               </Link>
               <Link href="/components" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <footer style={{ borderTop: "1px solid var(--border)", color: "var(--text-dim)" }} className="py-10 text-center text-xs uppercase tracking-[0.18em]">
-          The Cocktail Cabinet — a personal collection
+          Pours by Mackay — a personal collection
         </footer>
       </body>
     </html>
