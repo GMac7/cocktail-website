@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </span>
             </Link>
             <nav className="flex items-center gap-10">
-              <Link href="/" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
+              <Link href="/cocktails" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
                 Cocktails
               </Link>
               <Link href="/components" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
