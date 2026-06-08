@@ -154,7 +154,7 @@ export default function CocktailForm({ initial }: { initial?: Partial<CocktailDa
               </div>
               <button type="button" onClick={() => removeIngredient(i)}
                 className="shrink-0 px-2.5 py-2.5 rounded-lg text-sm"
-                style={{ color: '#e07040', border: '1px solid var(--border)' }}>
+                style={{ color: '#a14a4a', border: '1px solid var(--border)' }}>
                 ✕
               </button>
             </div>
@@ -187,7 +187,7 @@ export default function CocktailForm({ initial }: { initial?: Partial<CocktailDa
               />
               <button type="button" onClick={() => removeInstruction(i)}
                 className="shrink-0 px-2.5 py-2.5 rounded-lg text-sm mt-0.5"
-                style={{ color: '#e07040', border: '1px solid var(--border)' }}>
+                style={{ color: '#a14a4a', border: '1px solid var(--border)' }}>
                 ✕
               </button>
             </div>
@@ -217,7 +217,7 @@ export default function CocktailForm({ initial }: { initial?: Partial<CocktailDa
         </div>
       </section>
 
-      {error && <p className="text-sm text-center" style={{ color: '#e07040' }}>{error}</p>}
+      {error && <p className="text-sm text-center" style={{ color: '#a14a4a' }}>{error}</p>}
 
       <div className="flex justify-end gap-3">
         <button type="button" onClick={() => router.back()}
@@ -227,7 +227,7 @@ export default function CocktailForm({ initial }: { initial?: Partial<CocktailDa
         </button>
         <button type="submit" disabled={saving}
           className="px-6 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-50"
-          style={{ background: 'var(--amber)', color: '#0d0d0f' }}>
+          style={{ background: 'var(--text)', color: 'var(--bg)' }}>
           {saving ? 'Saving…' : form.id ? 'Save changes' : 'Create cocktail'}
         </button>
       </div>

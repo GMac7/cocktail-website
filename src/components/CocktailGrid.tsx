@@ -21,10 +21,10 @@ type Cocktail = {
 const DIFFICULTY_ORDER: Record<string, number> = { Easy: 1, Medium: 2, Hard: 3, Advanced: 4 };
 
 const difficultyColor = (d: string) => {
-  if (d === 'Easy') return '#4caf7a';
-  if (d === 'Medium') return '#c8952a';
-  if (d === 'Hard') return '#e07040';
-  return '#c04040';
+  if (d === 'Easy') return '#5b8266';
+  if (d === 'Medium') return '#a3742c';
+  if (d === 'Hard') return '#b5663f';
+  return '#a14a4a';
 };
 
 export default function CocktailGrid({
@@ -65,151 +65,139 @@ export default function CocktailGrid({
   }, [cocktails, search, category, spirit, sort]);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 w-full">
+    <div className="w-full">
       {/* Hero */}
-      <div className="mb-10">
-        <h1 className="text-4xl font-semibold tracking-tight mb-2" style={{ color: 'var(--amber)' }}>
-          Cocktail Collection
+      <div className="max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
+        <p className="text-xs uppercase tracking-[0.3em] mb-5" style={{ color: 'var(--text-dim)' }}>
+          A Personal Collection
+        </p>
+        <h1 className="font-serif-display italic text-5xl sm:text-6xl mb-5" style={{ color: 'var(--text)' }}>
+          Cocktail Cabinet
         </h1>
+        <div className="w-16 h-px mx-auto mb-5" style={{ background: 'var(--amber)' }} />
         <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-          {cocktails.length} recipe{cocktails.length !== 1 ? 's' : ''} in the cabinet
+          {cocktails.length} recipe{cocktails.length !== 1 ? 's' : ''}, carefully measured and poured
         </p>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-8">
-        <input
-          type="search"
-          placeholder="Search cocktails, spirits, tags…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="flex-1 min-w-60 px-4 py-2.5 rounded-lg text-sm outline-none transition-colors"
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            color: 'var(--text)',
-          }}
-        />
-        <select
-          value={category}
-          onChange={e => setCategory(e.target.value)}
-          className="px-4 py-2.5 rounded-lg text-sm outline-none"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}
-        >
-          <option value="">All categories</option>
-          {categories.map(c => (
-            <option key={c}>{c}</option>
-          ))}
-        </select>
-        <select
-          value={spirit}
-          onChange={e => setSpirit(e.target.value)}
-          className="px-4 py-2.5 rounded-lg text-sm outline-none"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}
-        >
-          <option value="">All spirits</option>
-          {spirits.map(s => (
-            <option key={s}>{s}</option>
-          ))}
-        </select>
-        <select
-          value={sort}
-          onChange={e => setSort(e.target.value as typeof sort)}
-          className="px-4 py-2.5 rounded-lg text-sm outline-none"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)' }}
-        >
-          <option value="name">Sort: Name</option>
-          <option value="rating">Sort: Rating</option>
-          <option value="difficulty">Sort: Difficulty</option>
-        </select>
-      </div>
-
-      {/* Grid */}
-      {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-32 gap-4" style={{ color: 'var(--text-dim)' }}>
-          {cocktails.length === 0 ? (
-            <>
-              <span className="text-5xl">🍸</span>
-              <p className="text-lg">No cocktails yet.</p>
-              <Link
-                href="/admin/cocktails/new"
-                className="mt-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
-                style={{ background: 'var(--amber)', color: '#0d0d0f' }}
-              >
-                Add your first recipe
-              </Link>
-            </>
-          ) : (
-            <>
-              <span className="text-4xl">🔍</span>
-              <p>No cocktails match your search.</p>
-              <button
-                onClick={() => { setSearch(''); setCategory(''); setSpirit(''); }}
-                className="text-sm underline"
-                style={{ color: 'var(--amber)' }}
-              >
-                Clear filters
-              </button>
-            </>
-          )}
+      <div className="max-w-6xl mx-auto px-6 pb-24">
+        {/* Filters */}
+        <div className="flex flex-wrap gap-3 mb-12 pb-8" style={{ borderBottom: '1px solid var(--border)' }}>
+          <input
+            type="search"
+            placeholder="Search cocktails, spirits, tags…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="flex-1 min-w-60 px-4 py-2.5 text-sm outline-none transition-colors bg-transparent"
+            style={{
+              borderBottom: '1px solid var(--border)',
+              color: 'var(--text)',
+            }}
+          />
+          <select
+            value={category}
+            onChange={e => setCategory(e.target.value)}
+            className="px-4 py-2.5 text-sm outline-none bg-transparent"
+            style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}
+          >
+            <option value="">All categories</option>
+            {categories.map(c => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>
+          <select
+            value={spirit}
+            onChange={e => setSpirit(e.target.value)}
+            className="px-4 py-2.5 text-sm outline-none bg-transparent"
+            style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}
+          >
+            <option value="">All spirits</option>
+            {spirits.map(s => (
+              <option key={s}>{s}</option>
+            ))}
+          </select>
+          <select
+            value={sort}
+            onChange={e => setSort(e.target.value as typeof sort)}
+            className="px-4 py-2.5 text-sm outline-none bg-transparent"
+            style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}
+          >
+            <option value="name">Sort: Name</option>
+            <option value="rating">Sort: Rating</option>
+            <option value="difficulty">Sort: Difficulty</option>
+          </select>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map(c => (
-            <Link
-              key={c.id}
-              href={`/cocktails/${c.id}`}
-              className="group block rounded-xl p-5 transition-all duration-200"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border)',
-              }}
-            >
-              <div className="flex items-start justify-between gap-2 mb-3">
-                <h2 className="font-semibold text-lg leading-tight group-hover:text-amber transition-colors"
-                  style={{ color: 'var(--text)' }}>
-                  {c.name}
-                </h2>
-                {c.rating > 0 && (
-                  <span className="shrink-0 text-xs font-mono px-1.5 py-0.5 rounded"
-                    style={{ background: 'var(--bg-hover)', color: 'var(--amber)' }}>
-                    ★ {c.rating}
+
+        {/* Grid */}
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-32 gap-4" style={{ color: 'var(--text-dim)' }}>
+            {cocktails.length === 0 ? (
+              <>
+                <p className="font-serif-display italic text-2xl" style={{ color: 'var(--text-muted)' }}>The cabinet is empty.</p>
+                <Link
+                  href="/admin/cocktails/new"
+                  className="mt-3 px-6 py-3 text-xs uppercase tracking-[0.18em] rounded-full transition-opacity hover:opacity-80"
+                  style={{ background: 'var(--text)', color: 'var(--bg)' }}
+                >
+                  Add your first recipe
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="font-serif-display italic text-2xl" style={{ color: 'var(--text-muted)' }}>No cocktails match your search.</p>
+                <button
+                  onClick={() => { setSearch(''); setCategory(''); setSpirit(''); }}
+                  className="text-xs uppercase tracking-[0.18em] underline underline-offset-4"
+                  style={{ color: 'var(--amber)' }}
+                >
+                  Clear filters
+                </button>
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+            {filtered.map(c => (
+              <Link
+                key={c.id}
+                href={`/cocktails/${c.id}`}
+                className="group block"
+              >
+                <div className="aspect-[4/5] mb-5 flex items-center justify-center transition-colors duration-300"
+                  style={{ background: 'var(--bg-hover)', border: '1px solid var(--border)' }}>
+                  <span className="font-serif-display italic text-3xl text-center px-6 transition-opacity duration-300 opacity-30 group-hover:opacity-50"
+                    style={{ color: 'var(--text)' }}>
+                    {c.name}
                   </span>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {c.baseSpirit && (
-                  <span className="text-xs px-2 py-0.5 rounded-full"
-                    style={{ background: 'var(--bg-hover)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
-                    {c.baseSpirit}
-                  </span>
-                )}
-                {c.style && (
-                  <span className="text-xs px-2 py-0.5 rounded-full"
-                    style={{ background: 'var(--bg-hover)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
-                    {c.style}
-                  </span>
-                )}
-                {c.method && (
-                  <span className="text-xs px-2 py-0.5 rounded-full"
-                    style={{ background: 'var(--bg-hover)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
-                    {c.method}
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center justify-between text-xs" style={{ color: 'var(--text-dim)' }}>
-                <span>{c.ingredientCount} ingredient{c.ingredientCount !== 1 ? 's' : ''}</span>
-                <div className="flex items-center gap-3">
-                  {c.abv && <span>{c.abv} ABV</span>}
-                  {c.difficulty && (
-                    <span style={{ color: difficultyColor(c.difficulty) }}>{c.difficulty}</span>
+                </div>
+                <div className="flex items-start justify-between gap-2 mb-1.5">
+                  <h2 className="font-serif-display text-xl leading-tight transition-colors"
+                    style={{ color: 'var(--text)' }}>
+                    {c.name}
+                  </h2>
+                  {c.rating > 0 && (
+                    <span className="shrink-0 text-xs font-mono mt-1" style={{ color: 'var(--amber)' }}>
+                      {c.rating}/10
+                    </span>
                   )}
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+                <p className="text-xs uppercase tracking-[0.14em] mb-3" style={{ color: 'var(--text-muted)' }}>
+                  {[c.baseSpirit, c.style, c.method].filter(Boolean).join(' · ')}
+                </p>
+                <div className="flex items-center justify-between text-xs" style={{ color: 'var(--text-dim)' }}>
+                  <span>{c.ingredientCount} ingredient{c.ingredientCount !== 1 ? 's' : ''}</span>
+                  <div className="flex items-center gap-3">
+                    {c.abv && <span>{c.abv} ABV</span>}
+                    {c.difficulty && (
+                      <span style={{ color: difficultyColor(c.difficulty) }}>{c.difficulty}</span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
