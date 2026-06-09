@@ -1,9 +1,10 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const SYSTEM_PROMPT = `You are an expert cocktail developer with deep knowledge of flavor science, classic cocktail ratios, and creative ingredient pairing. Your role is to help develop original, balanced, and delicious cocktail recipes.
+const BASE_SYSTEM_PROMPT = `You are an expert cocktail developer with deep knowledge of flavor science, classic cocktail ratios, and creative ingredient pairing. Your role is to help develop original, balanced, and delicious cocktail recipes.
 
 ## Your Core Expertise
 
@@ -95,6 +96,55 @@ Then after the JSON, provide:
 - Suggest the unexpected ingredient that elevates the drink from good to memorable
 - Ask clarifying questions if the concept is vague, but only one question at a time`;
 
+async function buildGoldStandardContext(): Promise<string> {
+  const topRecipes = await prisma.cocktail.findMany({
+    where: { rating: { gte: 9 } },
+    include: {
+      ingredients: { include: { ingredient: true }, orderBy: { order: 'asc' } },
+    },
+    orderBy: { rating: 'desc' },
+  });
+
+  if (topRecipes.length === 0) return '';
+
+  const lines = topRecipes.map(r => {
+    const ingredientList = r.ingredients
+      .map(i => `${i.amount} ${i.ingredient.name}`)
+      .join(', ');
+    const tags = JSON.parse(r.tags || '[]') as string[];
+    const tagStr = tags.length > 0 ? ` [${tags.join(', ')}]` : '';
+    return `- **${r.name}** (${r.rating}/10) — ${r.baseSpirit}, ${r.method}, ${r.glass}${tagStr} | ${ingredientList}`;
+  });
+
+  // Derive taste preferences from the gold-standard set
+  const spiritCounts: Record<string, number> = {};
+  const methodCounts: Record<string, number> = {};
+  for (const r of topRecipes) {
+    if (r.baseSpirit) spiritCounts[r.baseSpirit] = (spiritCounts[r.baseSpirit] ?? 0) + 1;
+    if (r.method) methodCounts[r.method] = (methodCounts[r.method] ?? 0) + 1;
+  }
+  const topSpirits = Object.entries(spiritCounts).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([s]) => s);
+  const topMethods = Object.entries(methodCounts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([m]) => m);
+
+  return `
+## This User's Gold-Standard Recipes (rated 9–10/10)
+
+The following are recipes from this user's personal collection that they have rated 9 or 10 out of 10. These represent their benchmark for excellence — use them to calibrate your suggestions to their taste:
+
+${lines.join('\n')}
+
+### Inferred Taste Preferences
+- **Favourite spirits**: ${topSpirits.join(', ')}
+- **Preferred methods**: ${topMethods.join(', ')}
+- **Total gold-standard recipes**: ${topRecipes.length}
+
+### How to apply this
+- Mirror the complexity, ingredient count, and style of these recipes when making suggestions
+- Avoid suggesting something too similar to a recipe already on this list — aim for genuine novelty
+- If a suggested recipe shares a base spirit with a gold-standard recipe, the bar is high: it needs to be clearly differentiated
+- Use the naming style and flavour philosophy evident in these recipes as a guide`;
+}
+
 export async function POST(req: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY is not configured' }, { status: 500 });
@@ -102,10 +152,16 @@ export async function POST(req: NextRequest) {
 
   const { messages } = await req.json();
 
+  // Build personalised system prompt with gold-standard context
+  const goldStandardContext = await buildGoldStandardContext();
+  const systemPrompt = goldStandardContext
+    ? `${BASE_SYSTEM_PROMPT}\n\n${goldStandardContext}`
+    : BASE_SYSTEM_PROMPT;
+
   const stream = await client.messages.create({
     model: 'claude-opus-4-5',
     max_tokens: 2048,
-    system: SYSTEM_PROMPT,
+    system: systemPrompt,
     messages,
     stream: true,
   });
