@@ -30,6 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/components" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
                 Components
               </Link>
+              <Link href="/develop" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--amber)" }}>
+                Workshop
+              </Link>
               <Link href="/admin" className="text-xs uppercase tracking-[0.18em] px-4 py-2 rounded-full border transition-colors hover:opacity-60"
                 style={{ color: "var(--text)", borderColor: "var(--border)" }}>
                 Admin

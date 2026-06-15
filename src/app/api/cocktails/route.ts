@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 function isAuthed(req: NextRequest) {
-  return req.cookies.get('admin_auth')?.value === process.env.ADMIN_PASSWORD;
+  return req.cookies.get('admin_auth')?.value === process.env.SESSION_SECRET;
 }
 
 export async function GET() {
