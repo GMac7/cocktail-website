@@ -16,6 +16,7 @@ type Cocktail = {
   rating: number;
   tags: string[];
   ingredientCount: number;
+  isOriginal: boolean;
 };
 
 const DIFFICULTY_ORDER: Record<string, number> = { Easy: 1, Medium: 2, Hard: 3, Advanced: 4 };
@@ -26,6 +27,68 @@ const difficultyColor = (d: string) => {
   if (d === 'Hard') return '#b5663f';
   return '#a14a4a';
 };
+
+function CocktailCard({ c }: { c: Cocktail }) {
+  return (
+    <Link key={c.id} href={`/cocktails/${c.id}`} className="group block">
+      <div className="aspect-[4/5] mb-5 flex items-center justify-center transition-colors duration-300"
+        style={{ background: 'var(--bg-hover)', border: '1px solid var(--border)' }}>
+        <span className="font-serif-display italic text-3xl text-center px-6 transition-opacity duration-300 opacity-30 group-hover:opacity-50"
+          style={{ color: 'var(--text)' }}>
+          {c.name}
+        </span>
+      </div>
+      <div className="flex items-start justify-between gap-2 mb-1.5">
+        <h2 className="font-serif-display text-xl leading-tight" style={{ color: 'var(--text)' }}>
+          {c.name}
+        </h2>
+        {c.rating > 0 && (
+          <span className="shrink-0 text-xs font-mono mt-1" style={{ color: 'var(--amber)' }}>
+            {c.rating}/10
+          </span>
+        )}
+      </div>
+      <p className="text-xs uppercase tracking-[0.14em] mb-3" style={{ color: 'var(--text-muted)' }}>
+        {[c.baseSpirit, c.style, c.method].filter(Boolean).join(' · ')}
+      </p>
+      <div className="flex items-center justify-between text-xs" style={{ color: 'var(--text-dim)' }}>
+        <span>{c.ingredientCount} ingredient{c.ingredientCount !== 1 ? 's' : ''}</span>
+        <div className="flex items-center gap-3">
+          {c.abv && <span>{c.abv} ABV</span>}
+          {c.difficulty && (
+            <span style={{ color: difficultyColor(c.difficulty) }}>{c.difficulty}</span>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function CocktailCardGrid({ cocktails }: { cocktails: Cocktail[] }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+      {cocktails.map(c => <CocktailCard key={c.id} c={c} />)}
+    </div>
+  );
+}
+
+function Section({ title, cocktails }: { title: string; cocktails: Cocktail[] }) {
+  if (cocktails.length === 0) return null;
+  return (
+    <div className="mb-20">
+      <div className="flex items-center gap-6 mb-10">
+        <h2 className="font-serif-display italic text-3xl shrink-0" style={{ color: 'var(--text)' }}>
+          {title}
+        </h2>
+        <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+        <span className="text-xs uppercase tracking-[0.18em] shrink-0" style={{ color: 'var(--text-dim)' }}>
+          {cocktails.length}
+        </span>
+      </div>
+      <CocktailCardGrid cocktails={cocktails} />
+    </div>
+  );
+}
 
 export default function CocktailGrid({
   cocktails,
@@ -63,6 +126,8 @@ export default function CocktailGrid({
     });
     return out;
   }, [cocktails, search, category, spirit, sort]);
+
+  const isFiltering = !!(search || category || spirit);
 
   return (
     <div className="w-full">
@@ -155,49 +220,16 @@ export default function CocktailGrid({
               </>
             )}
           </div>
+        ) : isFiltering ? (
+          <CocktailCardGrid cocktails={filtered} />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-            {filtered.map(c => (
-              <Link
-                key={c.id}
-                href={`/cocktails/${c.id}`}
-                className="group block"
-              >
-                <div className="aspect-[4/5] mb-5 flex items-center justify-center transition-colors duration-300"
-                  style={{ background: 'var(--bg-hover)', border: '1px solid var(--border)' }}>
-                  <span className="font-serif-display italic text-3xl text-center px-6 transition-opacity duration-300 opacity-30 group-hover:opacity-50"
-                    style={{ color: 'var(--text)' }}>
-                    {c.name}
-                  </span>
-                </div>
-                <div className="flex items-start justify-between gap-2 mb-1.5">
-                  <h2 className="font-serif-display text-xl leading-tight transition-colors"
-                    style={{ color: 'var(--text)' }}>
-                    {c.name}
-                  </h2>
-                  {c.rating > 0 && (
-                    <span className="shrink-0 text-xs font-mono mt-1" style={{ color: 'var(--amber)' }}>
-                      {c.rating}/10
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs uppercase tracking-[0.14em] mb-3" style={{ color: 'var(--text-muted)' }}>
-                  {[c.baseSpirit, c.style, c.method].filter(Boolean).join(' · ')}
-                </p>
-                <div className="flex items-center justify-between text-xs" style={{ color: 'var(--text-dim)' }}>
-                  <span>{c.ingredientCount} ingredient{c.ingredientCount !== 1 ? 's' : ''}</span>
-                  <div className="flex items-center gap-3">
-                    {c.abv && <span>{c.abv} ABV</span>}
-                    {c.difficulty && (
-                      <span style={{ color: difficultyColor(c.difficulty) }}>{c.difficulty}</span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <>
+            <Section title="Original Creations" cocktails={filtered.filter(c => c.isOriginal)} />
+            <Section title="Classics & Discovered" cocktails={filtered.filter(c => !c.isOriginal)} />
+          </>
         )}
       </div>
     </div>
   );
 }
+

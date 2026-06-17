@@ -6,14 +6,27 @@ export const dynamic = 'force-dynamic';
 
 export default async function CocktailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const cocktail = await prisma.cocktail.findUnique({
-    where: { id: parseInt(id) },
-    include: {
-      ingredients: { include: { ingredient: true }, orderBy: { order: 'asc' } },
-      instructions: { orderBy: { stepNumber: 'asc' } },
-    },
-  });
+  const [cocktail, syrups, infusions, liqueurs, shrubs] = await Promise.all([
+    prisma.cocktail.findUnique({
+      where: { id: parseInt(id) },
+      include: {
+        ingredients: { include: { ingredient: true }, orderBy: { order: 'asc' } },
+        instructions: { orderBy: { stepNumber: 'asc' } },
+      },
+    }),
+    prisma.syrup.findMany({ select: { name: true } }),
+    prisma.infusion.findMany({ select: { name: true } }),
+    prisma.liqueur.findMany({ select: { name: true } }),
+    prisma.shrub.findMany({ select: { name: true } }),
+  ]);
   if (!cocktail) notFound();
+
+  // Build a lookup: ingredient name → URL to its component page
+  const componentLink: Record<string, string> = {};
+  for (const { name } of syrups) componentLink[name] = `/components?open=${encodeURIComponent(name)}`;
+  for (const { name } of infusions) componentLink[name] = `/components?open=${encodeURIComponent(name)}`;
+  for (const { name } of liqueurs) componentLink[name] = `/components?open=${encodeURIComponent(name)}`;
+  for (const { name } of shrubs) componentLink[name] = `/components?open=${encodeURIComponent(name)}`;
 
   const tags: string[] = JSON.parse(cocktail.tags || '[]');
 
@@ -34,7 +47,7 @@ export default async function CocktailPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-16 w-full">
-      <Link href="/" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] mb-12 transition-opacity hover:opacity-60"
+      <Link href="/cocktails" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] mb-12 transition-opacity hover:opacity-60"
         style={{ color: 'var(--text-muted)' }}>
         ← Back to collection
       </Link>
@@ -95,7 +108,13 @@ export default async function CocktailPage({ params }: { params: Promise<{ id: s
                   borderBottom: i < cocktail.ingredients.length - 1 ? '1px solid var(--border)' : 'none',
                 }}>
                 <span className="text-sm" style={{ color: 'var(--text)' }}>
-                  {ci.ingredient.name}
+                  {componentLink[ci.ingredient.name] ? (
+                    <Link href={componentLink[ci.ingredient.name]}
+                      className="underline underline-offset-2 decoration-dotted transition-opacity hover:opacity-60"
+                      style={{ color: 'var(--amber)' }}>
+                      {ci.ingredient.name}
+                    </Link>
+                  ) : ci.ingredient.name}
                   {ci.notes && <span className="ml-1.5" style={{ color: 'var(--text-muted)' }}>{ci.notes}</span>}
                 </span>
                 <span className="text-sm font-mono ml-4 shrink-0" style={{ color: 'var(--amber)' }}>
