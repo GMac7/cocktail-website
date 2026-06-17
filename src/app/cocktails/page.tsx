@@ -22,6 +22,7 @@ export default async function CocktailsPage() {
     rating: c.rating,
     tags: JSON.parse(c.tags || '[]') as string[],
     ingredientCount: c.ingredients.length,
+    isOriginal: c.origin === 'Original Recipe',
   }));
 
   const categories = [...new Set(cocktails.map(c => c.category).filter(Boolean))].sort();
