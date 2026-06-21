@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -12,7 +13,10 @@ export const metadata: Metadata = {
   description: "A personal collection of handcrafted cocktail recipes",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const isAuthed = cookieStore.get('admin_auth')?.value === process.env.SESSION_SECRET;
+
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full`}>
       <body className="min-h-full flex flex-col" style={{ background: "var(--bg)", color: "var(--text)" }}>
@@ -30,9 +34,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/components" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
                 Components
               </Link>
-              <Link href="/develop" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--amber)" }}>
-                Workshop
-              </Link>
+              {isAuthed && (
+                <>
+                  <Link href="/build" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
+                    Builder
+                  </Link>
+                  <Link href="/drafts" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
+                    Drafts
+                  </Link>
+                  <Link href="/develop" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--amber)" }}>
+                    Workshop
+                  </Link>
+                </>
+              )}
               <Link href="/admin" className="text-xs uppercase tracking-[0.18em] px-4 py-2 rounded-full border transition-colors hover:opacity-60"
                 style={{ color: "var(--text)", borderColor: "var(--border)" }}>
                 Admin
