@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
   const cookieStore = await cookies();
-  const isAuthed = cookieStore.get('admin_auth')?.value === process.env.ADMIN_PASSWORD;
+  const isAuthed = cookieStore.get('admin_auth')?.value === process.env.SESSION_SECRET;
 
   if (!isAuthed) return <AdminLogin />;
 
