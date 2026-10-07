@@ -31,9 +31,9 @@ const difficultyColor = (d: string) => {
 function CocktailCard({ c }: { c: Cocktail }) {
   return (
     <Link key={c.id} href={`/cocktails/${c.id}`} className="group block">
-      <div className="aspect-[4/5] mb-5 flex items-center justify-center transition-colors duration-300"
+      <div className="aspect-[4/3] mb-5 flex items-center justify-center transition-colors duration-300"
         style={{ background: 'var(--bg-hover)', border: '1px solid var(--border)' }}>
-        <span className="font-serif-display italic text-3xl text-center px-6 transition-opacity duration-300 opacity-30 group-hover:opacity-50"
+        <span className="font-serif-display italic text-xl text-center px-5 transition-opacity duration-300 opacity-30 group-hover:opacity-50"
           style={{ color: 'var(--text)' }}>
           {c.name}
         </span>
