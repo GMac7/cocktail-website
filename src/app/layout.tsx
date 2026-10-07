@@ -34,19 +34,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Link href="/components" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
                 Components
               </Link>
-              {isAuthed && (
-                <>
-                  <Link href="/build" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
-                    Builder
-                  </Link>
-                  <Link href="/drafts" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
-                    Drafts
-                  </Link>
-                  <Link href="/develop" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--amber)" }}>
-                    Workshop
-                  </Link>
-                </>
-              )}
               <Link href="/admin" className="text-xs uppercase tracking-[0.18em] px-4 py-2 rounded-full border transition-colors hover:opacity-60"
                 style={{ color: "var(--text)", borderColor: "var(--border)" }}>
                 Admin
