@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"], style: ["normal", "italic"] });
 
 export const metadata: Metadata = {
-  title: "The Cocktail Cabinet",
+  title: "Pours by Mackay",
   description: "A personal collection of handcrafted cocktail recipes",
 };
 
@@ -17,21 +18,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const isAuthed = cookieStore.get('admin_auth')?.value === process.env.SESSION_SECRET;
 
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full`}>
       <body className="min-h-full flex flex-col" style={{ background: "var(--bg)", color: "var(--text)" }}>
-        <header style={{ borderBottom: "1px solid var(--border)", background: "var(--bg)" }} className="sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <header style={{ borderBottom: "1px solid var(--border)", background: "rgba(253, 252, 250, 0.85)", backdropFilter: "blur(8px)" }} className="sticky top-0 z-50">
+          <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 group">
-              <span className="text-2xl" role="img" aria-label="cocktail">🍸</span>
-              <span className="font-semibold tracking-wide" style={{ color: "var(--amber)", letterSpacing: "0.08em" }}>
-                The Cocktail Cabinet
+              <span className="font-serif-display text-2xl italic tracking-wide" style={{ color: "var(--text)" }}>
+                Pours by Mackay
               </span>
             </Link>
-            <nav className="flex items-center gap-8">
-              <Link href="/" className="text-sm hover:text-amber transition-colors" style={{ color: "var(--text-muted)" }}>
+            <nav className="flex items-center gap-10">
+              <Link href="/cocktails" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
                 Cocktails
               </Link>
-              <Link href="/components" className="text-sm hover:text-amber transition-colors" style={{ color: "var(--text-muted)" }}>
+              <Link href="/components" className="text-xs uppercase tracking-[0.18em] transition-colors hover:opacity-60" style={{ color: "var(--text-muted)" }}>
                 Components
               </Link>
               <Link href="/admin" className="text-xs uppercase tracking-[0.18em] px-4 py-2 rounded-full border transition-colors hover:opacity-60"
@@ -44,8 +44,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <main className="flex-1 flex flex-col">
           {children}
         </main>
-        <footer style={{ borderTop: "1px solid var(--border)", color: "var(--text-dim)" }} className="py-8 text-center text-xs">
-          The Cocktail Cabinet — a personal collection
+        <footer style={{ borderTop: "1px solid var(--border)", color: "var(--text-dim)" }} className="py-10 text-center text-xs uppercase tracking-[0.18em]">
+          Pours by Mackay — a personal collection
         </footer>
       </body>
     </html>
